@@ -96,7 +96,12 @@ const PlayersRegister = ({ onConfirm }: PlayersRegisterProps) => {
 
   const agregarJugador = () => {
     if (!nombre.trim()) return
-    const nuevo = { id: Date.now().toString(), nombre }
+    const nuevo = {
+      id: Date.now().toString(),
+      nombre,
+      posicion: jugadores.length + 1,
+    }
+
     setJugadores((prev) => [...prev, nuevo])
     setNombre('')
   }
@@ -108,7 +113,15 @@ const PlayersRegister = ({ onConfirm }: PlayersRegisterProps) => {
     const oldIndex = jugadores.findIndex((j) => j.id === active.id)
     const newIndex = jugadores.findIndex((j) => j.id === over.id)
 
-    setJugadores((jugadores) => arrayMove(jugadores, oldIndex, newIndex))
+    const nuevosOrdenados = arrayMove(jugadores, oldIndex, newIndex)
+
+    // Reasignar posición según el nuevo orden
+    const actualizados = nuevosOrdenados.map((jugador, index) => ({
+      ...jugador,
+      posicion: index + 1,
+    }))
+
+    setJugadores(actualizados)
   }
 
   const handleEliminarJugador = (id: string) => {

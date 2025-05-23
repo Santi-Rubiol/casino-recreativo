@@ -18,6 +18,29 @@ const Generala = () => {
   const [jugadaActual, setJugadaActual] = useState('')
   const [jugadores, setJugadores] = useState<Jugador[]>([])
   const [registroConfirmado, setRegistroConfirmado] = useState(false)
+  const [turnoActual, setTurnoActual] = useState<Jugador | null>(null)
+
+  const finDeTurno = () => {
+    if (!jugadores.length) return
+
+    const jugadoresOrdenados = [...jugadores].sort(
+      (a, b) => a.posicion - b.posicion
+    )
+
+    if (!turnoActual) {
+      // Si es el primer turno, seleccionamos el primero
+      setTurnoActual(jugadoresOrdenados[0])
+      return
+    }
+
+    // Buscar el índice del turno actual
+    const indexActual = jugadoresOrdenados.findIndex(
+      (j) => j.id === turnoActual.id
+    )
+    const indexSiguiente = (indexActual + 1) % jugadoresOrdenados.length
+
+    setTurnoActual(jugadoresOrdenados[indexSiguiente])
+  }
 
   const tirarDados = () => {
     const nuevos = dados.map((dado) =>
@@ -49,16 +72,17 @@ const Generala = () => {
             setRegistroConfirmado(true)
           }}
         />
-      ) : tiradas > 0 ? (
+      ) : (
         <>
-          <h2>{jugadaActual}</h2>
+          <h2>Turno de {turnoActual?.nombre}</h2>
+          <h3>{jugadaActual}</h3>
           <h3>TIROS RESTANTES {tiradas}</h3>
           <div style={{ display: 'flex', gap: '1rem' }}>
             {dados.map(({ value, fijo }, index) => (
               <Dado
                 key={index}
                 value={value ?? undefined}
-                fijo={fijo}
+                fijo={fijo && tiradas > 0}
                 onClick={() => {
                   const nuevos = [...dados]
                   nuevos[index].fijo = !nuevos[index].fijo
@@ -67,12 +91,13 @@ const Generala = () => {
               />
             ))}
           </div>
+          {tiradas > 0 ? (
+            <button onClick={tirarDados}>TIRAR DADOS</button>
+          ) : (
+            <button onClick={finDeTurno}>SIGUIENTE TURNO</button>
+          )}
         </>
-      ) : (
-        <></>
       )}
-
-      <button onClick={tirarDados}>Tirar Dados</button>
     </div>
   )
 }
