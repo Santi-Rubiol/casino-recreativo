@@ -22,18 +22,23 @@ const Generala = () => {
   const [turnoActual, setTurnoActual] = useState<Jugador | null>(null)
   const jugadores: Jugador[] = leerJugadoresStorage()
 
+  useEffect(() => {
+    if (tiradas !== 3) {
+      verJugadaActual(dados.map((dado) => dado.value ?? 0))
+    }
+  }, [dados, tiradas])
+
+  if (!turnoActual) {
+    setTurnoActual(jugadores[0])
+    return
+  }
+
   const finDeTurno = () => {
     if (!jugadores.length) return
 
     const jugadoresOrdenados = [...jugadores].sort(
       (a, b) => a.posicion - b.posicion
     )
-
-    if (!turnoActual) {
-      // Si es el primer turno, seleccionamos el primero
-      setTurnoActual(jugadoresOrdenados[0])
-      return
-    }
 
     // Buscar el índice del turno actual
     const indexActual = jugadoresOrdenados.findIndex(
@@ -42,6 +47,14 @@ const Generala = () => {
     const indexSiguiente = (indexActual + 1) % jugadoresOrdenados.length
 
     setTurnoActual(jugadoresOrdenados[indexSiguiente])
+    setTiradas(3)
+    setDados([
+      { value: null, fijo: false },
+      { value: null, fijo: false },
+      { value: null, fijo: false },
+      { value: null, fijo: false },
+      { value: null, fijo: false },
+    ])
   }
 
   const tirarDados = () => {
@@ -54,12 +67,6 @@ const Generala = () => {
     setDados(nuevos)
     setTiradas(tiradas - 1)
   }
-
-  useEffect(() => {
-    if (tiradas !== 3) {
-      verJugadaActual(dados.map((dado) => dado.value ?? 0))
-    }
-  }, [dados, tiradas])
 
   return (
     <div>
@@ -98,11 +105,8 @@ const Generala = () => {
           </div>
         </div>
       </div>
-      {tiradas > 0 ? (
-        <button onClick={tirarDados}>TIRAR DADOS</button>
-      ) : (
-        <button onClick={finDeTurno}>SIGUIENTE TURNO</button>
-      )}
+      {tiradas > 0 ? <button onClick={tirarDados}>TIRAR DADOS</button> : <></>}
+      <button onClick={finDeTurno}>SIGUIENTE TURNO</button>
     </div>
   )
 }

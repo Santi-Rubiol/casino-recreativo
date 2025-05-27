@@ -5,6 +5,7 @@ const Leaderboard = ({ jugadores }: { jugadores: Jugador[] }) => {
     <table>
       <thead>
         <tr>
+          <th>#</th>
           <th>NOMBRE</th>
           <th>PUNTOS</th>
         </tr>
@@ -12,6 +13,7 @@ const Leaderboard = ({ jugadores }: { jugadores: Jugador[] }) => {
       <tbody>
         {jugadores.map((jugador) => (
           <tr key={jugador.id}>
+            <td>{jugador.posicion}</td>
             <td>{jugador.nombre}</td>
             <td>{jugador.puntaje ?? 0}</td>
           </tr>
