@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react'
 import { verJugadaActual } from './jugadasPosibles'
+import { useNavigate } from 'react-router-dom'
+import { leerJugadoresStorage } from '../../data/registroJugadores'
 import Dado from '../../components/Dado/Dado'
-import PlayersRegister from '../../components/PlayersRegister/PlayersRegister'
+import Leaderboard from '../../components/Leaderboard/Leaderboard'
 import type { Jugador } from '../../types/Types'
 
 const Generala = () => {
+  const navigate = useNavigate()
   const [dados, setDados] = useState<{ value: number | null; fijo: boolean }[]>(
     [
       { value: null, fijo: false },
@@ -16,9 +19,8 @@ const Generala = () => {
   )
   const [tiradas, setTiradas] = useState(3)
   const [jugadaActual, setJugadaActual] = useState('')
-  const [jugadores, setJugadores] = useState<Jugador[]>([])
-  const [registroConfirmado, setRegistroConfirmado] = useState(false)
   const [turnoActual, setTurnoActual] = useState<Jugador | null>(null)
+  const jugadores: Jugador[] = leerJugadoresStorage()
 
   const finDeTurno = () => {
     if (!jugadores.length) return
@@ -61,19 +63,22 @@ const Generala = () => {
 
   return (
     <div>
+      <button onClick={() => navigate('/')}>VOLVER AL MENÚ</button>
       <h1>GENERALA</h1>
-      {jugadores.map((jugador) => (
-        <p key={jugador.id}>{jugador.nombre}</p>
-      ))}
-      {!registroConfirmado ? (
-        <PlayersRegister
-          onConfirm={(lista) => {
-            setJugadores(lista)
-            setRegistroConfirmado(true)
-          }}
-        />
-      ) : (
-        <>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: '2rem',
+          width: '100%',
+          padding: '1rem',
+        }}
+      >
+        <div>
+          <Leaderboard jugadores={jugadores} />
+        </div>
+        <div>
           <h2>Turno de {turnoActual?.nombre}</h2>
           <h3>{jugadaActual}</h3>
           <h3>TIROS RESTANTES {tiradas}</h3>
@@ -91,12 +96,12 @@ const Generala = () => {
               />
             ))}
           </div>
-          {tiradas > 0 ? (
-            <button onClick={tirarDados}>TIRAR DADOS</button>
-          ) : (
-            <button onClick={finDeTurno}>SIGUIENTE TURNO</button>
-          )}
-        </>
+        </div>
+      </div>
+      {tiradas > 0 ? (
+        <button onClick={tirarDados}>TIRAR DADOS</button>
+      ) : (
+        <button onClick={finDeTurno}>SIGUIENTE TURNO</button>
       )}
     </div>
   )
