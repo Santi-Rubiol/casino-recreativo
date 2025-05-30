@@ -1,10 +1,17 @@
-export function verJugadaActual(dados: number[]): string {
-  console.log('Dados:', dados)
+export const JUGADAS = [
+  { nombre: 'Generala', valor: 50 },
+  { nombre: 'Poker', valor: 40 },
+  { nombre: 'Full', valor: 30 },
+  { nombre: 'Escalera', valor: 25 },
+  { nombre: 'Trío', valor: 20 },
+  { nombre: 'Nada', valor: 0 },
+]
+
+export function verJugadaActual(dados: number[]) {
   if (dados.length !== 5 || !dados.every((d) => d >= 1 && d <= 6)) {
     throw new Error('Debe haber exactamente 5 dados con valores del 1 al 6.')
   }
-
-  // Contar ocurrencias de cada número
+  let nombreJugadaActual = 'Nada'
   const contador: { [key: number]: number } = {}
   for (const dado of dados) {
     contador[dado] = (contador[dado] || 0) + 1
@@ -13,17 +20,15 @@ export function verJugadaActual(dados: number[]): string {
   const cantidades = Object.values(contador).sort((a, b) => b - a)
   const dadosUnicos = [...new Set(dados)].sort((a, b) => a - b)
 
-  // Verificar jugadas
-  if (cantidades[0] === 5) return 'Generala'
-  if (cantidades[0] === 4) return 'Poker'
-  if (cantidades[0] === 3 && cantidades[1] === 2) return 'Full'
+  if (cantidades[0] === 5) nombreJugadaActual = 'Generala'
+  if (cantidades[0] === 4) nombreJugadaActual = 'Poker'
+  if (cantidades[0] === 3 && cantidades[1] === 2) nombreJugadaActual = 'Full'
   if (
     JSON.stringify(dadosUnicos) === JSON.stringify([1, 2, 3, 4, 5]) ||
     JSON.stringify(dadosUnicos) === JSON.stringify([2, 3, 4, 5, 6])
-  ) {
-    return 'Escalera'
-  }
-  if (cantidades[0] === 3) return 'Trío'
-
-  return 'Nada'
+  )
+    nombreJugadaActual = 'Escalera'
+  if (cantidades[0] === 3) nombreJugadaActual = 'Trío'
+  nombreJugadaActual = 'Nada'
+  return JUGADAS.find((j) => j.nombre === nombreJugadaActual)!
 }

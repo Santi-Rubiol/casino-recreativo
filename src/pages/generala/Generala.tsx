@@ -63,7 +63,8 @@ const Generala = () => {
     )
 
     const jugada = verJugadaActual(nuevos.map((dado) => dado.value ?? 0))
-    setJugadaActual(jugada)
+    console.log('JUGADA: ', jugada.nombre)
+    setJugadaActual(jugada.nombre)
     setDados(nuevos)
     setTiradas(tiradas - 1)
   }
