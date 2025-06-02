@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { verJugadaActual } from './jugadasPosibles'
 import { useNavigate } from 'react-router-dom'
-import { leerJugadoresStorage } from '../../data/registroJugadores'
+import {
+  leerJugadoresStorage,
+  actualizarPuntaje,
+} from '../../data/registroJugadores'
 import Dado from '../../components/Dado/Dado'
 import Leaderboard from '../../components/Leaderboard/Leaderboard'
 import type { Jugador } from '../../types/Types'
+import type { JUGADA } from './Generala_Types'
 
 const Generala = () => {
   const navigate = useNavigate()
@@ -18,15 +22,15 @@ const Generala = () => {
     ]
   )
   const [tiradas, setTiradas] = useState(3)
-  const [jugadaActual, setJugadaActual] = useState('')
+  const [jugadaActual, setJugadaActual] = useState<JUGADA | null>(null)
   const [turnoActual, setTurnoActual] = useState<Jugador | null>(null)
   const jugadores: Jugador[] = leerJugadoresStorage()
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (tiradas !== 3) {
       verJugadaActual(dados.map((dado) => dado.value ?? 0))
     }
-  }, [dados, tiradas])
+  }, [dados, tiradas]) */
 
   if (!turnoActual) {
     setTurnoActual(jugadores[0])
@@ -45,7 +49,13 @@ const Generala = () => {
       (j) => j.id === turnoActual.id
     )
     const indexSiguiente = (indexActual + 1) % jugadoresOrdenados.length
-
+    if (jugadaActual) {
+      turnoActual.puntaje = turnoActual.puntaje + jugadaActual?.valor
+      console.log(
+        'SUMAR ' + jugadaActual?.valor + ' puntos a ' + turnoActual.nombre
+      )
+      actualizarPuntaje(turnoActual.id, jugadaActual?.valor)
+    }
     setTurnoActual(jugadoresOrdenados[indexSiguiente])
     setTiradas(3)
     setDados([
@@ -55,6 +65,7 @@ const Generala = () => {
       { value: null, fijo: false },
       { value: null, fijo: false },
     ])
+    setJugadaActual(null)
   }
 
   const tirarDados = () => {
@@ -63,8 +74,7 @@ const Generala = () => {
     )
 
     const jugada = verJugadaActual(nuevos.map((dado) => dado.value ?? 0))
-    console.log('JUGADA: ', jugada.nombre)
-    setJugadaActual(jugada.nombre)
+    setJugadaActual(jugada)
     setDados(nuevos)
     setTiradas(tiradas - 1)
   }
@@ -88,7 +98,9 @@ const Generala = () => {
         </div>
         <div>
           <h2>Turno de {turnoActual?.nombre}</h2>
-          <h3>{jugadaActual}</h3>
+          <h3>
+            {jugadaActual?.nombre} ---- {jugadaActual?.valor}
+          </h3>
           <h3>TIROS RESTANTES {tiradas}</h3>
           <div style={{ display: 'flex', gap: '1rem' }}>
             {dados.map(({ value, fijo }, index) => (

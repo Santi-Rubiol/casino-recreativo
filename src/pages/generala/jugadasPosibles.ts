@@ -1,4 +1,6 @@
-export const JUGADAS = [
+import type { JUGADA } from './Generala_Types'
+
+export const JUGADAS: JUGADA[] = [
   { nombre: 'Generala', valor: 50 },
   { nombre: 'Poker', valor: 40 },
   { nombre: 'Full', valor: 30 },
@@ -29,6 +31,6 @@ export function verJugadaActual(dados: number[]) {
   )
     nombreJugadaActual = 'Escalera'
   if (cantidades[0] === 3) nombreJugadaActual = 'Trío'
-  nombreJugadaActual = 'Nada'
+
   return JUGADAS.find((j) => j.nombre === nombreJugadaActual)!
 }
