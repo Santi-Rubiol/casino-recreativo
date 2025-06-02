@@ -11,14 +11,22 @@ export const leerJugadoresStorage = (): Jugador[] => {
   return data ? JSON.parse(data) : []
 }
 
-export const actualizarPuntaje = (id: string, nuevoPuntaje: number) => {
-  const jugadores = leerJugadoresStorage()
-
-  const actualizados = jugadores.map((jugador) =>
-    jugador.id === id
-      ? { ...jugador, puntaje: jugador.puntaje + nuevoPuntaje }
-      : jugador
+export const actualizarPuntajeYPosiciones = (
+  jugadores: Jugador[],
+  id: string,
+  puntos: number
+): Jugador[] => {
+  const actualizados = jugadores.map((j) =>
+    j.id === id ? { ...j, puntaje: j.puntaje + puntos } : j
   )
 
-  guardarJugadoresStorage(actualizados)
+  const ordenados = [...actualizados].sort((a, b) => b.puntaje - a.puntaje)
+
+  const reposicionados = ordenados.map((j, i) => ({
+    ...j,
+    posicion: i + 1,
+  }))
+
+  guardarJugadoresStorage(reposicionados)
+  return reposicionados
 }

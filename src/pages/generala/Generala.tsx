@@ -3,7 +3,7 @@ import { verJugadaActual } from './jugadasPosibles'
 import { useNavigate } from 'react-router-dom'
 import {
   leerJugadoresStorage,
-  actualizarPuntaje,
+  actualizarPuntajeYPosiciones,
 } from '../../data/registroJugadores'
 import Dado from '../../components/Dado/Dado'
 import Leaderboard from '../../components/Leaderboard/Leaderboard'
@@ -38,25 +38,20 @@ const Generala = () => {
   }
 
   const finDeTurno = () => {
-    if (!jugadores.length) return
+    if (!jugadores.length || !turnoActual || !jugadaActual) return
 
-    const jugadoresOrdenados = [...jugadores].sort(
-      (a, b) => a.posicion - b.posicion
+    const jugadoresActualizados = actualizarPuntajeYPosiciones(
+      jugadores,
+      turnoActual.id,
+      jugadaActual.valor
     )
 
-    // Buscar el índice del turno actual
-    const indexActual = jugadoresOrdenados.findIndex(
+    const indexActual = jugadoresActualizados.findIndex(
       (j) => j.id === turnoActual.id
     )
-    const indexSiguiente = (indexActual + 1) % jugadoresOrdenados.length
-    if (jugadaActual) {
-      turnoActual.puntaje = turnoActual.puntaje + jugadaActual?.valor
-      console.log(
-        'SUMAR ' + jugadaActual?.valor + ' puntos a ' + turnoActual.nombre
-      )
-      actualizarPuntaje(turnoActual.id, jugadaActual?.valor)
-    }
-    setTurnoActual(jugadoresOrdenados[indexSiguiente])
+    const indexSiguiente = (indexActual + 1) % jugadoresActualizados.length
+
+    setTurnoActual(jugadoresActualizados[indexSiguiente])
     setTiradas(3)
     setDados([
       { value: null, fijo: false },
