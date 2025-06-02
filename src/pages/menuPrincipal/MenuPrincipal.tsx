@@ -31,6 +31,17 @@ const MenuPrincipal = () => {
       />
 
       <Button
+        text="CARRERAS"
+        onClick={() => {
+          if (jugadores.length > 0) {
+            navigate('/random-race')
+          } else {
+            alert('NO LISTASTE JUGADORES')
+          }
+        }}
+      />
+
+      <Button
         text="EJEMPLO"
         onClick={() => console.log('PRUEBITA')}
       />
