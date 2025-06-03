@@ -29,12 +29,21 @@ const MenuPrincipal = () => {
           }
         }}
       />
-
       <Button
         text="CARRERAS"
         onClick={() => {
           if (jugadores.length > 0) {
             navigate('/random-race')
+          } else {
+            alert('NO LISTASTE JUGADORES')
+          }
+        }}
+      />
+      <Button
+        text="TRAGAMONEDAS"
+        onClick={() => {
+          if (jugadores.length > 0) {
+            navigate('/tragamonedas')
           } else {
             alert('NO LISTASTE JUGADORES')
           }
