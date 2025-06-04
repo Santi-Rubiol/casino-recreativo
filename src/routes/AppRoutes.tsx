@@ -3,7 +3,7 @@ import MenuPrincipal from '../pages/MenuPrincipal/MenuPrincipal'
 import Generala from '../pages/Generala/Generala'
 import RandomRaceGame from '../pages/CarreraRandom/CarreraRandom'
 import TragaMonedas from '../pages/TragaMonedas/TragaMonedas'
-import Estrucutre from '../layout/Estructure'
+import Estructure from '../layout/Estructure'
 
 const AppRoutes = () => (
   <Router>
@@ -14,7 +14,7 @@ const AppRoutes = () => (
       />
       <Route
         path="/generala"
-        element={<Estrucutre MainContent={<Generala />} />}
+        element={<Estructure MainContent={<Generala />} />}
       />
       <Route
         path="/random-race"

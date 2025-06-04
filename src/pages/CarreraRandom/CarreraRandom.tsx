@@ -1,7 +1,6 @@
 // RandomRaceGame.tsx
 import React, { useState, useEffect, useRef } from 'react'
 import Leaderboard from '../../components/Leaderboard/Leaderboard'
-import { useNavigate } from 'react-router-dom'
 import {
   leerJugadoresStorage,
   actualizarPuntajeYPosiciones,
@@ -10,7 +9,6 @@ import type { Jugador } from '../../types/Types'
 import type { Corredor } from './Carrera'
 
 const RandomRaceGame: React.FC = () => {
-  const navigate = useNavigate()
   const [isRunning, setIsRunning] = useState<boolean>(false)
   const [winner, setWinner] = useState<string | null>(null)
   const intervalRef = useRef<number | null>(null)
@@ -67,7 +65,6 @@ const RandomRaceGame: React.FC = () => {
 
   return (
     <div style={{ fontFamily: 'sans-serif', padding: '20px' }}>
-      <button onClick={() => navigate('/')}>VOLVER AL MENÚ</button>
       <Leaderboard jugadores={jugadores} />
       <h1>🏁 Carrera Aleatoria</h1>
       {corredores.map((corredor, index) => (
