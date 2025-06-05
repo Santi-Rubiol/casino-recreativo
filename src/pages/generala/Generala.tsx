@@ -12,9 +12,16 @@ const Generala = ({
   jugadores: Jugador[]
   setJugadores: React.Dispatch<React.SetStateAction<Jugador[]>>
 }) => {
-  const [dados, setDados] = useState<{ value: number | null; fijo: boolean }[]>(
-    Array(5).fill({ value: null, fijo: false })
-  )
+  const [dados, setDados] = useState<
+    { value: number | null; fijo: boolean; debeAnimar: boolean }[]
+  >([
+    { value: null, fijo: false, debeAnimar: false },
+    { value: null, fijo: false, debeAnimar: false },
+    { value: null, fijo: false, debeAnimar: false },
+    { value: null, fijo: false, debeAnimar: false },
+    { value: null, fijo: false, debeAnimar: false },
+  ])
+
   const [tiradas, setTiradas] = useState(3)
   const [jugadaActual, setJugadaActual] = useState<JUGADA | null>(null)
   const [turnoActual, setTurnoActual] = useState<Jugador | null>(
@@ -43,9 +50,14 @@ const Generala = ({
   }
 
   const tirarDados = () => {
-    const nuevos = dados.map((dado) =>
-      dado.fijo ? dado : { ...dado, value: Math.ceil(Math.random() * 6) }
-    )
+    const nuevos = dados.map((dado) => {
+      if (dado.fijo) return { ...dado, debeAnimar: false } // no girar
+      return {
+        ...dado,
+        value: Math.ceil(Math.random() * 6),
+        debeAnimar: true, // girar porque fue lanzado
+      }
+    })
     const jugada = verJugadaActual(nuevos.map((dado) => dado.value ?? 0))
     setJugadaActual(jugada)
     setDados(nuevos)
@@ -63,11 +75,12 @@ const Generala = ({
           </h3>
           <h3>TIROS RESTANTES {tiradas}</h3>
           <div style={{ display: 'flex', gap: '1rem' }}>
-            {dados.map(({ value, fijo }, index) => (
+            {dados.map(({ value, fijo, debeAnimar }, index) => (
               <Dado
                 key={`${tiradas}-${index}`}
                 value={value ?? undefined}
                 fijo={fijo && tiradas > 0}
+                debeAnimar={debeAnimar}
                 onClick={() => {
                   const nuevos = [...dados]
                   nuevos[index].fijo = !nuevos[index].fijo
