@@ -22,15 +22,18 @@ export function verJugadaActual(dados: number[]) {
   const cantidades = Object.values(contador).sort((a, b) => b - a)
   const dadosUnicos = [...new Set(dados)].sort((a, b) => a - b)
 
-  if (cantidades[0] === 5) nombreJugadaActual = 'Generala'
-  if (cantidades[0] === 4) nombreJugadaActual = 'Poker'
-  if (cantidades[0] === 3 && cantidades[1] === 2) nombreJugadaActual = 'Full'
-  if (
+  if (cantidades[0] === 5) {
+    nombreJugadaActual = 'Generala'
+  } else if (cantidades[0] === 4) {
+    nombreJugadaActual = 'Poker'
+  } else if (cantidades[0] === 3 && cantidades[1] === 2) {
+    nombreJugadaActual = 'Full'
+  } else if (
     JSON.stringify(dadosUnicos) === JSON.stringify([1, 2, 3, 4, 5]) ||
     JSON.stringify(dadosUnicos) === JSON.stringify([2, 3, 4, 5, 6])
-  )
+  ) {
     nombreJugadaActual = 'Escalera'
-  if (cantidades[0] === 3) nombreJugadaActual = 'Trío'
+  } else if (cantidades[0] === 3) nombreJugadaActual = 'Trío'
 
   return JUGADAS.find((j) => j.nombre === nombreJugadaActual)!
 }
