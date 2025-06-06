@@ -14,10 +14,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import {
-  guardarJugadoresStorage,
-  leerJugadoresStorage,
-} from '../../data/registroJugadores'
+import { guardarJugadoresStorage } from '../../data/registroJugadores'
 import type { Jugador } from '../../types/Types'
 import './PlayersRegister.css'
 
@@ -62,6 +59,12 @@ const SortableRow = ({
       >
         {jugador.nombre}
       </td>
+      <td
+        {...attributes}
+        {...listeners}
+      >
+        {jugador.puntaje}
+      </td>
       <td>
         <button
           className="btn-eliminar"
@@ -75,20 +78,15 @@ const SortableRow = ({
   )
 }
 
-type PlayersRegisterProps = {
-  onConfirm: (jugadores: Jugador[]) => void
-}
-
-const PlayersRegister = ({ onConfirm }: PlayersRegisterProps) => {
+const PlayersRegister = ({
+  jugadores,
+  setJugadores,
+}: {
+  jugadores: Jugador[]
+  setJugadores: React.Dispatch<React.SetStateAction<Jugador[]>>
+}) => {
   const [nombre, setNombre] = useState('')
-  const [jugadores, setJugadores] = useState<Jugador[]>([])
-
   const sensores = useSensors(useSensor(PointerSensor))
-
-  useEffect(() => {
-    const datosGuardados = leerJugadoresStorage()
-    setJugadores(datosGuardados)
-  }, [])
 
   useEffect(() => {
     guardarJugadoresStorage(jugadores)
@@ -96,13 +94,16 @@ const PlayersRegister = ({ onConfirm }: PlayersRegisterProps) => {
 
   const agregarJugador = () => {
     if (!nombre.trim()) return
-    const nuevo = {
-      id: Date.now().toString(),
-      nombre,
-      posicion: jugadores.length + 1,
-    }
 
-    setJugadores((prev) => [...prev, nuevo])
+    setJugadores((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        nombre,
+        posicion: jugadores.length + 1,
+        puntaje: 0,
+      },
+    ])
     setNombre('')
   }
 
@@ -156,6 +157,7 @@ const PlayersRegister = ({ onConfirm }: PlayersRegisterProps) => {
               <tr>
                 <th>#</th>
                 <th>Nombre</th>
+                <th>Puntaje</th>
               </tr>
             </thead>
             <tbody>
@@ -171,13 +173,6 @@ const PlayersRegister = ({ onConfirm }: PlayersRegisterProps) => {
           </table>
         </SortableContext>
       </DndContext>
-
-      <button
-        className="btn-confirmar"
-        onClick={() => onConfirm(jugadores)}
-      >
-        Confirmar jugadores
-      </button>
     </div>
   )
 }

@@ -1,23 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { leerJugadoresStorage } from '../../data/registroJugadores'
 import Button from '../../components/Button/Button'
 import PlayersRegister from '../../components/PlayersRegister/PlayersRegister'
 import type { Jugador } from '../../types/Types'
 
 const MenuPrincipal = () => {
   const navigate = useNavigate()
-  const [jugadores, setJugadores] = useState<Jugador[]>([])
-  //const [registroConfirmado, setRegistroConfirmado] = useState(false)
-
-  useEffect(() => {}, [jugadores])
+  const [jugadores, setJugadores] = useState<Jugador[]>(() =>
+    leerJugadoresStorage()
+  )
 
   return (
     <div>
       <PlayersRegister
-        onConfirm={(lista) => {
-          setJugadores(lista)
-          // setRegistroConfirmado(true)
-        }}
+        jugadores={jugadores}
+        setJugadores={setJugadores}
       />
       <Button
         text="GENERALA"
