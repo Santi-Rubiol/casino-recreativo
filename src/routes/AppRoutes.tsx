@@ -22,7 +22,7 @@ const AppRoutes = () => (
       />
       <Route
         path="/tragamonedas"
-        element={<TragaMonedas />}
+        element={<GameEstructure MainContent={TragaMonedas} />}
       />
     </Routes>
   </Router>

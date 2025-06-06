@@ -1,17 +1,28 @@
-// SlotMachineGame.tsx
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { actualizarPuntajeYPosiciones } from '../../data/registroJugadores'
+import type { JUGADA } from './jugadasPosibles'
+import type { Jugador } from '../../types/Types'
 
 const symbols = ['🍒', '🍋', '🔔', '💎', '🍀', '7️⃣']
 
 const getRandomSymbol = () =>
   symbols[Math.floor(Math.random() * symbols.length)]
 
-const TragaMonedas: React.FC = () => {
+const TragaMonedas = ({
+  jugadores,
+  setJugadores,
+}: {
+  jugadores: Jugador[]
+  setJugadores: React.Dispatch<React.SetStateAction<Jugador[]>>
+}) => {
   const [reels, setReels] = useState<string[]>(['❔', '❔', '❔'])
   const [spinning, setSpinning] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
-  const navigate = useNavigate()
+  const [tiradas, setTiradas] = useState(3)
+  const [jugadaActual, setJugadaActual] = useState<JUGADA | null>(null)
+  const [turnoActual, setTurnoActual] = useState<Jugador | null>(
+    jugadores[0] ?? null
+  )
 
   const spin = () => {
     setSpinning(true)
@@ -27,6 +38,7 @@ const TragaMonedas: React.FC = () => {
         checkResult()
       }
     }, 100)
+    setTiradas(tiradas - 1)
   }
 
   const checkResult = () => {
@@ -38,11 +50,29 @@ const TragaMonedas: React.FC = () => {
     }
   }
 
+  const finDeTurno = () => {
+    if (!jugadores.length || !turnoActual || !jugadaActual) return
+
+    const jugadoresActualizados = actualizarPuntajeYPosiciones(
+      jugadores,
+      turnoActual.id,
+      jugadaActual.valor
+    )
+
+    setJugadores(jugadoresActualizados)
+    const indexActual = jugadoresActualizados.findIndex(
+      (j) => j.id === turnoActual.id
+    )
+    const indexSiguiente = (indexActual + 1) % jugadoresActualizados.length
+    setTurnoActual(jugadoresActualizados[indexSiguiente])
+    setTiradas(3)
+    setJugadaActual(null)
+  }
+
   return (
     <div
       style={{ fontFamily: 'sans-serif', textAlign: 'center', padding: '20px' }}
     >
-      <button onClick={() => navigate('/')}>VOLVER AL MENÚ</button>
       <h1>🎰 Tragamonedas</h1>
       <div
         style={{
@@ -57,12 +87,15 @@ const TragaMonedas: React.FC = () => {
           <span key={idx}>{symbol}</span>
         ))}
       </div>
-      <button
-        onClick={spin}
-        disabled={spinning}
-      >
-        {spinning ? 'Girando...' : 'Girar'}
-      </button>
+      {tiradas > 0 ? (
+        <button
+          onClick={spin}
+          disabled={spinning}
+        >
+          {spinning ? 'Girando...' : 'Girar'}
+        </button>
+      ) : null}
+      <button onClick={finDeTurno}>SIGUIENTE TURNO</button>
       {message && <h2 style={{ marginTop: '20px' }}>{message}</h2>}
     </div>
   )
