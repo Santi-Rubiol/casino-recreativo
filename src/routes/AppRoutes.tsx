@@ -18,7 +18,7 @@ const AppRoutes = () => (
       />
       <Route
         path="/random-race"
-        element={<RandomRaceGame />}
+        element={<GameEstructure MainContent={RandomRaceGame} />}
       />
       <Route
         path="/tragamonedas"

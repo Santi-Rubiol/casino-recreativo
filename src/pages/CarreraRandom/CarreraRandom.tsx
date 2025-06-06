@@ -1,18 +1,19 @@
 // RandomRaceGame.tsx
 import React, { useState, useEffect, useRef } from 'react'
-import Leaderboard from '../../components/Leaderboard/Leaderboard'
-import {
-  leerJugadoresStorage,
-  actualizarPuntajeYPosiciones,
-} from '../../data/registroJugadores'
+import { actualizarPuntajeYPosiciones } from '../../data/registroJugadores'
 import type { Jugador } from '../../types/Types'
 import type { Corredor } from './Carrera'
 
-const RandomRaceGame: React.FC = () => {
+const RandomRaceGame = ({
+  jugadores,
+  setJugadores,
+}: {
+  jugadores: Jugador[]
+  setJugadores: React.Dispatch<React.SetStateAction<Jugador[]>>
+}) => {
   const [isRunning, setIsRunning] = useState<boolean>(false)
   const [winner, setWinner] = useState<string | null>(null)
   const intervalRef = useRef<number | null>(null)
-  const jugadores: Jugador[] = leerJugadoresStorage()
   const finishLine = 90 // in percentage
   const [corredores, setCorredores] = useState<Corredor[]>(
     jugadores.map(
@@ -44,7 +45,13 @@ const RandomRaceGame: React.FC = () => {
             if (intervalRef.current !== null) clearInterval(intervalRef.current)
             const jugadorGanador = corredores[winnerIndex].jugador
             setWinner(jugadorGanador.nombre)
-            actualizarPuntajeYPosiciones(jugadores, jugadorGanador.id, 100)
+            console.log(jugadores, jugadorGanador.id, 100)
+            const jugadoresActualizados = actualizarPuntajeYPosiciones(
+              jugadores,
+              jugadorGanador.id,
+              100
+            )
+            setJugadores(jugadoresActualizados)
           }
 
           return newPositions
@@ -65,7 +72,6 @@ const RandomRaceGame: React.FC = () => {
 
   return (
     <div style={{ fontFamily: 'sans-serif', padding: '20px' }}>
-      <Leaderboard jugadores={jugadores} />
       <h1>🏁 Carrera Aleatoria</h1>
       {corredores.map((corredor, index) => (
         <div
