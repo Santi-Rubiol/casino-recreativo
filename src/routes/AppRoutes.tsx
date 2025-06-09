@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import MenuPrincipal from '../pages/MenuPrincipal/MenuPrincipal'
-import Generala from '../pages/Generala/Generala'
+import MenuPrincipal from '../pages/menuPrincipal/MenuPrincipal'
+import Generala from '../pages/generala/Generala'
 import RandomRaceGame from '../pages/CarreraRandom/CarreraRandom'
 import TragaMonedas from '../pages/TragaMonedas/TragaMonedas'
 import GameEstructure from '../layout/GameEstructure'
