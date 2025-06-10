@@ -3,6 +3,7 @@ import MenuPrincipal from '../pages/menuPrincipal/MenuPrincipal'
 import Generala from '../pages/generala/Generala'
 import RandomRaceGame from '../pages/CarreraRandom/CarreraRandom'
 import TragaMonedas from '../pages/TragaMonedas/TragaMonedas'
+import InteractiveRoulette from '../pages/InteractiveRoulette/InteractiveRoulette'
 import GameEstructure from '../layout/GameEstructure'
 
 const AppRoutes = () => (
@@ -23,6 +24,10 @@ const AppRoutes = () => (
       <Route
         path="/tragamonedas"
         element={<GameEstructure MainContent={TragaMonedas} />}
+      />
+      <Route
+        path="/ruleta"
+        element={<GameEstructure MainContent={InteractiveRoulette} />}
       />
     </Routes>
   </Router>

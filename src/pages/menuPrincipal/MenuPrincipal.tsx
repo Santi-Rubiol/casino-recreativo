@@ -47,7 +47,16 @@ const MenuPrincipal = () => {
           }
         }}
       />
-
+      <Button
+        text="RULETA"
+        onClick={() => {
+          if (jugadores.length > 0) {
+            navigate('/ruleta')
+          } else {
+            alert('NO LISTASTE JUGADORES')
+          }
+        }}
+      />
       <Button
         text="EJEMPLO"
         onClick={() => console.log('PRUEBITA')}

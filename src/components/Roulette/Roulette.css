@@ -1,0 +1,16 @@
+.button {
+  padding: 10px;
+  background-color: rgb(235, 153, 153);
+  color: rgb(0, 0, 0);
+  font-size: 25px;
+}
+
+.button:hover {
+  background-color: rgb(238, 74, 74);
+  color: rgb(255, 255, 255);
+}
+
+/* .roulette{
+    width: 500px;
+    height: 500px;
+} */

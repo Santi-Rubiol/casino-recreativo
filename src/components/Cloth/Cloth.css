@@ -1,0 +1,43 @@
+.clothPrincipalContent {
+  text-align: center;
+  color: white;
+  border: 1px black solid;
+  font-size: 25px;
+  width: 350px;
+}
+
+.numbersRowInCloth {
+  display: flex;
+  height: 40px;
+}
+
+.numberInCloth {
+  flex: auto;
+  width: 115px;
+  border: 1px rgb(255, 255, 255) solid;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.marked {
+  border: 1px solid blue;
+  border-radius: 100%;
+  background-color: blue;
+  height: fit-content;
+  width: fit-content;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin: 0;
+}
+
+.btnClear {
+  margin: 10px;
+  padding: 7px;
+  font-size: 19px;
+}
+
+.btnClear:hover {
+  background-color: blue;
+  color: white;
+}
